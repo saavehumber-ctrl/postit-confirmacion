@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Postit · Confirmación de cuenta</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px;
+           background: #F6EEDC; font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif; color: #412402; }
+    .nota { width: 100%; max-width: 380px; background: #FFF4B8; border-radius: 6px; border-top: 18px solid #F5E58A; padding: 28px 24px; }
+    .icono { font-size: 40px; line-height: 1; margin-bottom: 12px; }
+    h1 { font-size: 21px; font-weight: 500; margin: 0 0 10px; }
+    p { font-size: 15px; line-height: 1.6; margin: 0 0 10px; }
+    .pasos { background: rgba(255,255,255,.55); border-radius: 6px; padding: 12px 14px; font-size: 14px; }
+    .error .nota { background: #FBEAF0; border-top-color: #F4C0D1; }
+    .error { color: #4B1528; }
+    small { display: block; margin-top: 14px; color: #854F0B; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="nota" id="nota">
+    <div class="icono" id="icono" aria-hidden="true">✓</div>
+    <h1 id="titulo">Cuenta confirmada</h1>
+    <p id="texto">Tu correo quedó verificado. Ya puedes cerrar esta ventana.</p>
+    <div class="pasos" id="pasos">Regresa a la app <b>Postit</b> y entra con tu correo y contraseña.</div>
+    <small>Postit · notas y recordatorios</small>
+  </div>
+  <script>
+    // Supabase regresa aquí después de confirmar el correo. Si el enlace venció o ya se usó,
+    // trae el error en la URL. Por seguridad, se borran de la barra de direcciones los datos
+    // que vienen en el enlace (esta página no los usa).
+    (function () {
+      var datos = new URLSearchParams((location.hash || '').replace(/^#/, '') + '&' + (location.search || '').replace(/^\?/, ''));
+      var codigo = datos.get('error_code') || datos.get('error');
+      if (location.hash || location.search) history.replaceState(null, '', location.pathname);
+      if (!codigo) return;
+      document.body.classList.add('error');
+      document.getElementById('icono').textContent = '!';
+      document.getElementById('titulo').textContent = 'El enlace ya no es válido';
+      document.getElementById('texto').textContent = codigo === 'otp_expired'
+        ? 'Este enlace de confirmación venció o ya se usó.'
+        : 'No se pudo confirmar la cuenta con este enlace.';
+      document.getElementById('pasos').innerHTML =
+        'Abre la app <b>Postit</b>, intenta entrar y presiona <b>Reenviar correo de confirmación</b> para recibir uno nuevo. Si ya habías confirmado antes, simplemente entra.';
+    })();
+  </script>
+</body>
+</html>
