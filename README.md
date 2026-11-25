@@ -1,6 +1,6 @@
 # postit-confirmacion
 
-Página pública de **confirmación de cuenta** de la app Postit.
+Página pública de **confirmación de cuenta** de la app ElePostit.
 
 Supabase redirige aquí después de que una persona abre el enlace de confirmación de su correo
 (Site URL del proyecto). La página muestra "Cuenta confirmada" o, si el enlace venció, cómo pedir uno nuevo.
